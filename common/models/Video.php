@@ -35,6 +35,11 @@ class Video extends \yii\db\ActiveRecord
     public $uploadedFile;
 
     /**
+     * @var \yii\web\UploadedFile
+     */
+    public $thumbnail;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -88,6 +93,7 @@ class Video extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
+            'thumbnail' => 'Thumbnail',
         ];
     }
 
@@ -120,6 +126,10 @@ class Video extends \yii\db\ActiveRecord
             $this->video_name = $this->uploadedFile->name;
         }
 
+        if ($this->thumbnail) {
+            $this->has_thumbnail = 1;
+        }
+
         $isSaved = parent::save($runValidation, $attributeNames);
 
         if (! $isSaved) {
@@ -136,14 +146,44 @@ class Video extends \yii\db\ActiveRecord
             $this->uploadedFile->saveAs($videoPath);
         }
 
+        if ($this->thumbnail) {
+            $thumbnailPath = Yii::getAlias('@frontend/web/storage/thumbs/' . $this->video_id . '.jpg');
+
+            if (! is_dir(dirname($thumbnailPath))) {
+                FileHelper::createDirectory(dirname($thumbnailPath));
+            }
+
+            $this->thumbnail->saveAs($thumbnailPath);
+        }
+
         return true;
     }
 
     public function getVideoLink()
     {
-        return Yii::$app->params['frontendUrl']
-            . 'storage/videos/'
+        // return Yii::$app->params['frontendUrl'] // FIXME
+        return 'http://yii-youtube.test:20080'
+            . '/storage/videos/'
             . $this->video_id
             . '.mp4';
+    }
+
+    public function getThumbnailLink()
+    {
+        // return Yii::$app->params['frontendUrl'] // FIXME
+        return $this->has_thumbnail
+            ? 'http://yii-youtube.test:20080'
+                . '/storage/thumbs/'
+                . $this->video_id
+                . '.jpg'
+            : '';
+    }
+
+    public function getStatusLabels()
+    {
+        return [
+            self::STATUS_UNLISTED => 'Unlisted',
+            self::STATUS_PUBLISHED => 'Published'
+        ];
     }
 }

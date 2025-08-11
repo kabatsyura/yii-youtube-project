@@ -59,3 +59,7 @@ aside .nav-pills .nav-link.active{
 .badge {
     background-color: #0b5ed7;
 }
+
+.uploaded-video {
+    height: 160px;
+}
