@@ -22,10 +22,7 @@ if (Yii::$app->user->isGuest) {
 } else {
   $menuItems[] = [
     'label' => 'Create',
-    'url' => ['/site/index'],
-    'linkOptions' => [
-      'data-method' => 'post'
-    ]
+    'url' => ['/video/create']
   ];
   $menuItems[] = [
     'label' => 'Logout (' . Yii::$app->user->identity->username . ')',

@@ -1,6 +1,6 @@
 {
     "name": "yiisoft/yii2-app-advanced",
-    "description": "Yii 2 Advanced Project Template",
+    "description": "Yii youtube project for educational purpose",
     "keywords": ["yii2", "framework", "advanced", "project template"],
     "homepage": "https://www.yiiframework.com/",
     "type": "project",
