@@ -15,12 +15,14 @@ use yii\bootstrap5\ActiveForm;
     ]); ?>
     <div class="row">
         <div class="col-sm-8">
+            <?php echo $form->errorSummary($model) ?>
+
             <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
             <div class="form-group">
-                <label><?php echo $model->getAttributeLabel('thumbnail') ?></label>
+                <label class="mb-3"><?php echo $model->getAttributeLabel('thumbnail') ?></label>
                 <div class="input-group mb-3">
                     <input type="file" class="form-control" id="thumbnail" name="thumbnail">
                     <label class="input-group-text" for="thumbnail">Upload thumbnail</label>

@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use Imagine\Image\Box;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -73,6 +74,8 @@ class Video extends \yii\db\ActiveRecord
             ['has_thumbnail', 'default', 'value' => 0],
             ['status', 'default', 'value' => self::STATUS_UNLISTED],
             [['video_id'], 'unique'],
+            ['thumbnail', 'image', 'minWidth' => 800],
+            ['video', 'file', 'extensions' => ['mp4']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
         ];
     }
@@ -154,6 +157,11 @@ class Video extends \yii\db\ActiveRecord
             }
 
             $this->thumbnail->saveAs($thumbnailPath);
+
+            yii\imagine\Image::getImagine()
+                ->open($thumbnailPath)
+                ->thumbnail(new Box(800, 600))
+                ->save();
         }
 
         return true;
@@ -173,9 +181,9 @@ class Video extends \yii\db\ActiveRecord
         // return Yii::$app->params['frontendUrl'] // FIXME
         return $this->has_thumbnail
             ? 'http://yii-youtube.test:20080'
-                . '/storage/thumbs/'
-                . $this->video_id
-                . '.jpg'
+            . '/storage/thumbs/'
+            . $this->video_id
+            . '.jpg'
             : '';
     }
 
